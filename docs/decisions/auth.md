@@ -12,9 +12,10 @@
 
 ### アカウント：承認待ち方式
 
-- 決定：新しく登録した人（LINEログインを含む）は、教責か開発者が承認するまで何も操作できない。承認を戻せば利用を止められる
-- 理由：LINEアカウントは誰でも持っているので、そのままだと塾と関係のない人も入れてしまう。承認待ちなら、承認画面と「承認待ち」の状態だけで済む。辞めた講師も承認を戻すだけで止められる
+- 決定：新しく登録した人（LINEログインを含む）は、教責か開発者が承認するまで何も操作できない
+- 理由：LINEアカウントは誰でも持っているので、そのままだと塾と関係のない人も入れてしまう。承認待ちなら、承認画面と「承認待ち」の状態だけで済む
 - 決めた日：2026-10-12
+- 変更（2026-10-13）：「承認を戻せば利用を止められる」は、MVPの後に回した（#15）。MVPでは講師が辞めることを想定しない。止めるときに「募集中の依頼」や「これからの担当」が宙に浮く問題があり、その扱いを含めて #15 で作る
 
 ### 役割と承認状態の持ち方
 
@@ -49,7 +50,7 @@
   - メール確認を必須にする設定は、LINEログインに付けない（仮アドレスは確認メールを受け取れない）
   - 仮アドレスは画面に出さない
   - LINEの講師を見分ける鍵は、`account` テーブルの「プロバイダー＋ID」の組
-- 不確か：LINEのユーザーを見分ける項目名と、仮アドレスを入れる具体的な設定（`mapProfileToUser` など）。作る前に公式で確認する
+- 不確か：LINEのユーザーを見分ける項目名と、仮アドレスを入れる具体的な設定（`mapProfileToUser` など）。作る前に公式で確認する（2026-10-15に調べた結果は下の「LINEログインの仮アドレス（調べたこと）」）
 
 ### メールの扱い
 
@@ -68,6 +69,29 @@
 - 決定：古いアカウントを止め、新しいアカウントを承認する運用で対応する。記録の引き継ぎはMVPの後
 - 理由：引き継ぎの仕組みを作るより、承認待ち方式の運用で足りる
 - 決めた日：2026-10-13（関連：#16）
+- 補足（2026-10-15）：利用を止める機能はMVPの後（#15）なので、MVPの間は「古いアカウントを止める」が画面からはできない。前もって決めず、起きたときに「スクリプトで止める」か「止めずに置いておく」かを判断する
+
+## LINEログインの仮アドレス（調べたこと、2026-10-15）
+
+公式ドキュメントで確かめたことと、確かめきれていないこと。作る前にもう一度、公式で確認する。
+
+確かめたこと：
+
+- Better Auth は、すべてのユーザーにメールを必要とする。プロバイダーがメールを返さないと、`error=email_not_found` で失敗する（Better Auth: OAuth）
+- その対策として、`mapProfileToUser` で「プロバイダーの変わらないID」から仮アドレスを作る方法が公式に案内されている。届かないドメイン（`.invalid`）を使うよう書かれている。公式の例は Discord・Apple・Microsoft で、LINE の例はない
+- `mapProfileToUser` の戻り値は「利用者からの入力」として扱われる。`additionalFields` で `input: false` にした項目（役割・承認状態）は無視される。なので、LINEのプロフィールから役割や承認状態を書き換えられることはない
+- `mapProfileToUser` で、アカウントの識別（`account` の「プロバイダー＋ID」）は変えられない
+- 2回目以降のログインは、`account` の「プロバイダー＋ID」の組で見つける
+- Better Auth の LINE の既定のスコープは `openid`・`profile`・`email`。`disableDefaultScope` で既定を外し、`scope` で必要なものだけにできる
+- LINE の IDトークンには、必ず `sub`（ユーザーID）が入る。`email` は `email` スコープを付けたときだけ入る
+- LINE のユーザーIDは、**プロバイダー（LINE Developers の「プロバイダー」）ごとに違う値**になる。同じ人でも、別のプロバイダーのチャネルでは別のIDになる（LINE: Getting user IDs）
+- LINE からメールをもらうには、コンソールで「メールアドレスの取得権限」を申請する必要がある。利用者が同意画面で断ると `ACCESS_DENIED` になる
+
+ここから考えられること（案。決定ではない）：
+
+- メールを使わない決定なので、`email` スコープを外す（`disableDefaultScope` ＋ `scope: ["openid", "profile"]`）と、申請も個人情報も要らなくなる。既定のまま `email` を要求したとき、申請していないチャネルでどうなるかは不確か
+- 仮アドレスは LINE の `sub` から作ることになる。Better Auth の LINE の `mapProfileToUser` に渡ってくるプロフィールの項目名（`sub` か別の名前か）は、公式ページに書かれていない（不確か。ソースコードか、実際に動かして確かめる）
+- ユーザーIDはプロバイダーごとに変わるので、本番のLINEのチャネルは、最初に作ったプロバイダーから動かさない。移すと、全員が別人として扱われる
 
 ## LINEログインの準備（メモ）
 
@@ -81,6 +105,8 @@
 |---|---|---|
 | 2026-10-12 | LINEログインをMVPに入れる（後半）。承認待ち方式に決定（それまでの候補は「シードで登録済みの講師とLINEを結びつける方式」）。役割は `user` テーブルの列で持つ | — |
 | 2026-10-13 | 役割はスクリプトで付ける。LINEの講師は常に仮アドレス。メールの送受信はしない。パスワード再設定はスクリプト。LINEアカウントをなくした講師は運用で対応 | #16 |
+| 2026-10-13 | 「承認を戻せば利用を止められる」をMVPの後に回した | #15 |
+| 2026-10-15 | LINEログインの仮アドレスについて公式を調べた結果を追記。LINEアカウントをなくした講師は、MVPの間は起きたときに判断する | — |
 
 ## 出典
 
@@ -88,3 +114,7 @@
 - [Better Auth: Admin plugin](https://www.better-auth.com/docs/plugins/admin)
 - [Better Auth: LINE](https://www.better-auth.com/docs/authentication/line)
 - [LINE Developers Console overview](https://developers.line.biz/en/docs/line-developers-console/overview)
+- [Better Auth: OAuth（メールを返さないプロバイダー、mapProfileToUser）](https://www.better-auth.com/docs/concepts/oauth)
+- [LINE: Verify ID token（IDトークンの中身）](https://developers.line.biz/en/docs/line-login/verify-id-token/)
+- [LINE: Integrating LINE Login（メールアドレスの取得権限）](https://developers.line.biz/en/docs/line-login/integrate-line-login/)
+- [LINE: Getting user IDs（ユーザーIDはプロバイダーごと）](https://developers.line.biz/en/docs/messaging-api/getting-user-ids/)

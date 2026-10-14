@@ -37,6 +37,8 @@ DBは MySQL（手元はDocker）＋ Drizzle ORM。ER図（`docs/er.md`）はこ�
 - 理由：MySQLには `UPDATE … RETURNING` がない。条件付きUPDATEなら、1文で「確認と更新」を同時に行える
 - 例：`UPDATE 依頼 SET 状態='成立', 確定した講師=? WHERE id=? AND 状態='申し出あり'`
 - 決めた日：2026-10-12
+- 追記（2026-10-13）：期限切れの依頼はAPIでも操作できないと決めたので（[business-rules.md](business-rules.md)）、条件には授業時刻も含める（開始か終了かは未決）
+- 未決：取り下げ、申し出（「募集中→申し出あり」）も同じ守り方にするか。申し出はINSERTなので、「状態を確認してから記録する」の間に割り込まれる可能性がある（`docs/concurrency-cases.md` のケース4・5）
 
 ### 分離レベル
 
@@ -81,3 +83,4 @@ DBは MySQL（手元はDocker）＋ Drizzle ORM。ER図（`docs/er.md`）はこ�
 |---|---|---|
 | 2026-10-12 | PostgreSQLからMySQLに変更。確定の列、一意制約、bigintの日時、条件付きUPDATE、Repeatable Read前提を決めた | — |
 | 2026-10-13 | `user.email` に仮アドレスが混ざること、スクリプトによる例外を追記 | #16 |
+| 2026-10-15 | 条件付きUPDATEの条件に授業時刻を含めること、取り下げと申し出の守り方が未決であることを追記 | #14 |
