@@ -25,7 +25,7 @@ KomaPass（仮）は、個別指導塾の講師が「出られないコマ」の
 ## 技術構成
 
 | 層 | 使うもの |
-|---|---|
+| --- | --- |
 | フロント | React＋Vite＋TypeScript、React Router。サーバー状態は最初は自前のfetch、フェーズ3でTanStack Query |
 | API | Hono（Node.js上）。フロントとは型をHonoのRPCで共有 |
 | DB | MySQL（手元はDocker）＋Drizzle ORM（マイグレーション込み） |
@@ -39,7 +39,7 @@ KomaPass（仮）は、個別指導塾の講師が「出られないコマ」の
 
 ## ディレクトリ構成（予定）
 
-```
+```tree
 komapass/
 ├─ apps/
 │  ├─ web/src/   routes/ features/ components/ lib/

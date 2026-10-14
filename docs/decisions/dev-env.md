@@ -3,7 +3,7 @@
 ## 技術構成
 
 | 層 | 使うもの | 決めた日 |
-|---|---|---|
+| --- | --- | --- |
 | フロント | React＋Vite＋TypeScript、React Router。サーバー状態は最初は自前のfetch、フェーズ3でTanStack Query | 2026-10-11 |
 | API | Hono（Node.js上）。フロントとは型をHonoのRPCで共有 | 2026-10-11 |
 | DB | MySQL（手元はDocker）＋Drizzle ORM（マイグレーション込み） | 2026-10-12（[db.md](db.md)） |
@@ -50,7 +50,7 @@
 ## おすすめ（未決。[open-questions.md](open-questions.md)）
 
 | 対象 | おすすめ | 理由 |
-|---|---|---|
+| --- | --- | --- |
 | JSのパッケージ管理 | pnpm | 依存を1か所に保存して共有し、宣言していない依存を使えない構造で事故を防ぐ（公式）。ワークスペースに対応 |
 | Lintと整形 | Biome | 1つの道具と1つの設定（`biome.json`）で済む。ESLintのプラグインにしかないルールが要ったら、その時にESLintを足す |
 | コマンドの入口 | Makefile | 準備は30分〜1時間。`up / down / migrate / seed / test / set-role` を1か所にまとめられる |
@@ -61,7 +61,7 @@
 ## 決定の履歴
 
 | 日付 | 内容 | 関連 |
-|---|---|---|
+| --- | --- | --- |
 | 2026-10-11 | 技術構成（React・Hono・zod・Vitest）、Hono RPC、WSL2 | — |
 | 2026-10-12 | DBをMySQLに、公開先をRailwayに。Node.jsとDockerはフェーズ0で入れる | — |
 
