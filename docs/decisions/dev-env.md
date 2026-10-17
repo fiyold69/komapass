@@ -7,7 +7,7 @@
 | フロント | React＋Vite＋TypeScript、React Router。サーバー状態は最初は自前のfetch、フェーズ3でTanStack Query | 2026-10-11 |
 | API | Hono（Node.js上）。フロントとは型をHonoのRPCで共有 | 2026-10-11 |
 | DB | MySQL（手元はDocker）＋Drizzle ORM（マイグレーション込み） | 2026-10-12（[db.md](db.md)） |
-| 認証 | Better Auth。メールとパスワード、後半にLINEログイン | 2026-10-12（[auth.md](auth.md)） |
+| 認証 | Better Auth。MVPは全員LINEログイン。メールとパスワードはMVPの後（#23） | 2026-10-12、LINEだけにしたのは 2026-10-15（[auth.md](auth.md)） |
 | 検証・テスト | zod、Vitest | 2026-10-11 |
 | 公開先 | Railway Hobby | 2026-10-12（[deploy.md](deploy.md)） |
 
@@ -53,7 +53,7 @@
 | --- | --- | --- |
 | JSのパッケージ管理 | pnpm | 依存を1か所に保存して共有し、宣言していない依存を使えない構造で事故を防ぐ（公式）。ワークスペースに対応 |
 | Lintと整形 | Biome | 1つの道具と1つの設定（`biome.json`）で済む。ESLintのプラグインにしかないルールが要ったら、その時にESLintを足す |
-| コマンドの入口 | Makefile | 準備は30分〜1時間。`up / down / migrate / seed / test / set-role` を1か所にまとめられる |
+| コマンドの入口 | Makefile | 準備は30分〜1時間。`up / down / migrate / seed / test / set-role / 時限表の登録（名前は未定）` を1か所にまとめられる |
 | フォルダ | `apps/web`・`apps/api` の2つ | 準備は1〜2時間。`packages/shared` は必要になってから作る |
 
 どれを選んでも、lockファイルをコミットし、使う版を `package.json` の `packageManager` 欄で固定する（固定方法の詳細は要確認）。
