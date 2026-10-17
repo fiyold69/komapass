@@ -147,6 +147,3 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
-
-# claude retro files
-.claude/learning
