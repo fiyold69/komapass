@@ -1,0 +1,15 @@
+language: ja-JP
+reviews:
+  profile: chill
+  auto_review:
+    enabled: true
+    drafts: false
+  path_instructions:
+    - path: "**/*"
+      instructions: |
+        作者は学習中。指摘だけを書き、修正したコードや、そのまま取り込める修正案は出さない。
+        直すのは作者。何を調べればよいか、どこが原因かのヒントにとどめる。
+knowledge_base:
+  code_guidelines:
+    filePatterns:
+      - "**/CLAUDE.md"
