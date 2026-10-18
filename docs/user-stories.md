@@ -1,5 +1,7 @@
 # ユーザーストーリー（MVP）
 
+業務ルールとその理由の正本は [docs/decisions/business-rules.md](decisions/business-rules.md)。このファイルは、利用者から見た確かめ方（テストの項目）を書く。食い違ったら business-rules.md を正とし、こちらを直す。
+
 ## US-01 依頼を出す
 
 講師として、出られないコマの代講を募集したい。
