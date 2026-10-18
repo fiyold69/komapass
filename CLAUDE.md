@@ -61,7 +61,7 @@ KomaPass（仮）は、個別指導塾の講師が「出られないコマ」の
 ```tree
 komapass/
 ├─ apps/
-│  ├─ web/src/   routes/ features/ components/ lib/
+│  ├─ web/src/   routes/ features/ components/ lib/   # 教室長の画面もここ（apps/admin は作らない。dev-env.md）
 │  └─ api/src/   routes/ services/ db/ auth/ index.ts
 ├─ packages/shared/   # zodスキーマ・共通の型（必要になってから）
 ├─ docs/              # ER図・状態遷移図・API一覧・ADR・振り返り（Mermaid）

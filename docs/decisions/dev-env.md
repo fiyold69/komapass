@@ -55,6 +55,16 @@
 
 - lockファイルをコミットし、使う版を `package.json` の `packageManager` 欄で固定する（固定方法の詳細は要確認）
 
+### 教室長の画面の置き場所
+
+- MVPでは `apps/admin` を作らない。教室長の画面も `apps/web` に置き、`apps/web` の中で1か所（教室長用のフォルダと、`/admin` で始まるURL）にまとめる
+- 理由：
+  - MVPで教室長が画面で使うもの（成立一覧・アカウントの承認）は、塾の中の利用者の日々の仕事で、講師と同じ依頼のデータを使う。運営側の操作（役割の付与など）は、画面ではなくスクリプトにしている（[operations.md](operations.md)）
+  - 守りの本体はサーバー側の権限チェックで、アプリを分けても変わらない（[security.md](security.md)）
+  - 2つ目のアプリの準備に、時間を割く余裕が小さい
+  - 1か所にまとめておけば、あとから `apps/admin` に移すこともできる
+- 考え直すのは、権限を上げる・利用を止める操作（画面から役割を付ける機能、#15）を画面にするとき。そのときに、`apps/admin` に分けるか、少なくともAPIを分けて別に守るかを決める
+
 ## 出典
 
 - [WSL 2 best practices for Docker Desktop on Windows](https://docs.docker.com/desktop/features/wsl/best-practices/)
